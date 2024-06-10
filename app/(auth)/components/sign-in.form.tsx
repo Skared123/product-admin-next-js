@@ -102,7 +102,7 @@ function SignInForm() {
             </form>
 
             {/* Sign Up */}
-            <p className='text-center text-sm text-muted-foreground'> You don't have account?{" "}
+            <p className='text-center text-sm text-muted-foreground'> {"You don't have account?  "}
                 <Link
                     href={'/sign-up'}
                     className='underline underline-offset-4 hover:text-primary'
