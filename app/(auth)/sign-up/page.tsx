@@ -2,6 +2,11 @@ import Logo from "@/components/logo"
 import { Metadata } from "next"
 import SignUpForm from "./components/sign-up.form"
 
+export const metadata: Metadata= {
+  title: 'Sign Up',
+  description: 'Sign up to create your product list'
+}
+
 export default function SignUp() {
   return (
     <div className="flex justify-center items-center md:h-[95vh] md:px-10 lg:px-26">

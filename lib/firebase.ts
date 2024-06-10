@@ -3,10 +3,12 @@ import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { getStorage, uploadString, getDownloadURL, ref } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,6 +29,7 @@ export default app;
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app)
 
 /* Auth functions */
 
@@ -48,10 +51,39 @@ export const updateUser = (user: {
   if (auth.currentUser) return updateProfile(auth.currentUser, user);
 };
 
-/* Database Functions */
+export const sendResetEmail = async (email: string) => {
+  return sendPasswordResetEmail(auth,email)
+}
+
+//Sign Out
+export const signOutAccount = () => {
+  localStorage.removeItem('user')
+  return auth.signOut()
+}
+
+/* ================Database Functions=================== */
+
+/* Get a document from a collection */
+export const getDocument = async (path: string) => {
+  return (await getDoc(doc(db, path))).data()
+};
 
 /* Set a document in a collection */
 export const setDocument = (path: string, data: any) => {
   data.createdAt = serverTimestamp();
   return setDoc(doc(db, path), data);
 };
+
+/* Update a document in a collection */
+export const updateDocument = (path: string, data: any) => {
+  return updateDoc(doc(db, path), data);
+};
+
+
+/* ================== STORAGE FUNCTIONS ================== */
+
+/* Upload a file with base64 format and get the url*/
+export const uploadBase64 = async (path: string, base64: string) => {
+  await uploadString(ref(storage, path), base64, 'data_url');
+  return await getDownloadURL(ref(storage, path));
+}
